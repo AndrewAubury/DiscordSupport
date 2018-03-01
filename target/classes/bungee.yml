@@ -1,0 +1,5 @@
+name: DiscordSupport
+main: me.andrew.discordsupport.BungeePlugin
+version: 1.0.0
+author: AndrewAubury
+description: Run the discord bot inside minecraft

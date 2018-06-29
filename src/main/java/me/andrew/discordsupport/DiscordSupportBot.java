@@ -120,6 +120,7 @@ public class DiscordSupportBot {
         jda.addEventListener(new DiscordSetupListener());
         jda.addEventListener(new DiscordSupportTicketCreationListener());
         jda.addEventListener(new DiscordSupportTicketCloseListener());
+        jda.addEventListener(new ExtraCommands());
        // jda.addEventListener(new LinkStartListener());
        // jda.addEventListener(new DeleteBotMessagesListener());
     }

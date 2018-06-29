@@ -50,9 +50,11 @@ public class DiscordSupportTicketCloseListener extends ListenerAdapter {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        EmbedBuilder closedMsg = new EmbedBuilder();
+        closedMsg.setTitle("Closing Ticket");
         event.getChannel().sendMessage("Ticket marked as solved by " + event.getUser().getAsMention() + "! Closing ticket " + (guildInfo.isPmTranscriptsOnClose() ? "and PMing the transcript to all participants " : "") + "in " + guildInfo.getSecondsUntilTicketCloses() + " seconds...").complete();
-
+        closedMsg.setAuthor(event.getMember().getUser().getName(),null,event.getMember().getUser().getAvatarUrl());
+        closedMsg.setColor(Color.RED);
         try {
             Thread.sleep(guildInfo.getSecondsUntilTicketCloses() * 1000);
         } catch (InterruptedException e) {

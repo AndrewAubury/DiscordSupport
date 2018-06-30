@@ -3,6 +3,7 @@ package me.andrew.discordsupport;
 import me.andrew.discordsupport.listeners.*;
 import me.andrew.discordsupport.GuildInfo;
 import lombok.Getter;
+import me.andrew.discordsupport.listeners.commands.addAlphaCmd;
 import net.dv8tion.jda.core.AccountType;
 import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
@@ -121,6 +122,7 @@ public class DiscordSupportBot {
         jda.addEventListener(new DiscordSupportTicketCreationListener());
         jda.addEventListener(new DiscordSupportTicketCloseListener());
         jda.addEventListener(new ExtraCommands());
+        jda.addEventListener(new addAlphaCmd());
        // jda.addEventListener(new LinkStartListener());
        // jda.addEventListener(new DeleteBotMessagesListener());
     }

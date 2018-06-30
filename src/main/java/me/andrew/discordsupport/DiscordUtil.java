@@ -1,6 +1,8 @@
 package me.andrew.discordsupport;
 
 import me.andrew.discordsupport.DiscordSupportBot;
+import me.andrew.discordsupport.objects.QuestionRunnable;
+import me.andrew.discordsupport.objects.YesNoRunnable;
 import net.dv8tion.jda.core.entities.*;
 import net.dv8tion.jda.core.events.Event;
 import net.dv8tion.jda.core.events.message.guild.GuildMessageReceivedEvent;
@@ -73,6 +75,28 @@ public class DiscordUtil {
             if (pulled.getMember().getUser().equals(user) && pulled.getMessageId().equals(message.getId())) {
                 return pulled;
             }
+        }
+    }
+
+
+    public static void pullYesOrNo(Message messageToListenTo, User author, YesNoRunnable runnable) {
+        messageToListenTo.addReaction("✅").queue();
+        messageToListenTo.addReaction("❌").queue();
+
+        while (1 < 2) {
+            GuildMessageReactionAddEvent pulled = DiscordUtil.pullGuildMessageReactionAddEvent(author);
+            if (!pulled.getMessageId().equals(messageToListenTo.getId())) continue;
+            String emoji = pulled.getReactionEmote().getName();
+            if (!emoji.equals("✅") && !emoji.equals("❌")) continue;
+            boolean b = emoji.equals("✅");
+            runnable.run(b);
+        }
+    }
+
+    public static void pullString(TextChannel channel, User user, QuestionRunnable runnable) {
+        while (1 < 2) {
+            GuildMessageReceivedEvent pulled = DiscordUtil.pullGuildMessageReceivedEvent(user);
+            runnable.run(pulled.getMessage().getContentStripped());
         }
     }
 

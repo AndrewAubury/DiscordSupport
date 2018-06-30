@@ -43,7 +43,7 @@ public class addAlphaCmd extends ListenerAdapter {
         if(e.getMessage().getMentionedMembers().size() != 1){
             e.getChannel().sendMessage(new EmbedBuilder().setAuthor(e.getAuthor().getName(),null,e.getAuthor().getAvatarUrl())
                     .setColor(Color.RED)
-                    .setDescription("Usage: -addbeta {USER}")
+                    .setDescription("Usage: -addalpha {USER}")
                     .build()).complete();
         }
         Member target = e.getMessage().getMentionedMembers().get(0);
@@ -52,24 +52,32 @@ public class addAlphaCmd extends ListenerAdapter {
         List<Message> messages = new ArrayList<Message>();
         messages.add(e.getMessage());
 
-        Message tmpMSG = c.sendMessage("Are you sure you want to add "+target.getAsMention()+ " to MinePoS Alpha Testing?").complete();
-        DiscordUtil.pullYesOrNo(tmpMSG, e.getAuthor(), new YesNoRunnable() {
+        Thread thread = new Thread(new Runnable() {
             @Override
-            public void run(Boolean b) {
-                if(b){
-                    e.getChannel().sendMessage(new EmbedBuilder().setAuthor(target.getUser().getName(),null,target.getUser().getAvatarUrl())
-                            .setColor(Color.GREEN)
-                            .setDescription("Welcome to MinePoS Alpha!")
-                            .build()).complete();
-                    e.getGuild().getController().addRolesToMember(target,e.getGuild().getRolesByName("alpha",true)).complete();
-                }else{
-                    e.getChannel().sendMessage(new EmbedBuilder().setAuthor(e.getAuthor().getName(),null,e.getAuthor().getAvatarUrl())
-                            .setColor(Color.RED)
-                            .setDescription("Canceled!")
-                            .build()).complete();
-                }
+            public void run() {
+                Message tmpMSG = c.sendMessage("Are you sure you want to add "+target.getAsMention()+ " to MinePoS Alpha Testing?").complete();
+                DiscordUtil.pullYesOrNo(tmpMSG, e.getAuthor(), new YesNoRunnable() {
+                    @Override
+                    public void run(Boolean b) {
+                        if(b){
+                            e.getChannel().sendMessage(new EmbedBuilder().setAuthor(target.getUser().getName(),null,target.getUser().getAvatarUrl())
+                                    .setColor(Color.GREEN)
+                                    .setDescription("Welcome to MinePoS Alpha!")
+                                    .build()).complete();
+                            e.getGuild().getController().addRolesToMember(target,e.getGuild().getRolesByName("alpha",true)).complete();
+                        }else{
+                            e.getChannel().sendMessage(new EmbedBuilder().setAuthor(e.getAuthor().getName(),null,e.getAuthor().getAvatarUrl())
+                                    .setColor(Color.RED)
+                                    .setDescription("Canceled!")
+                                    .build()).complete();
+                        }
+                    }
+                });
+
             }
         });
+        thread.run();
+
 
     }
 }

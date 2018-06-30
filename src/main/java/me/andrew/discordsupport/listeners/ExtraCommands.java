@@ -34,6 +34,7 @@ public class ExtraCommands extends ListenerAdapter {
         if(!e.getMessage().getContentStripped().startsWith("-")){
             return;
         }
+
         if(e.getMessage().getContentStripped().startsWith("-new")) {
                 if(e.getMessage().getMentionedMembers().size() >0){
                     handleNewTicket(e.getGuild(),e.getMessage().getMentionedMembers().get(0),e.getMessage());

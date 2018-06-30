@@ -33,7 +33,7 @@ public class addAlphaCmd extends ListenerAdapter {
         if (e.getAuthor().isBot()) return;
         if (!DiscordSupportBot.isSetUp(e.getGuild())) return;
 
-        if(!e.getMessage().getContentStripped().startsWith("-addbeta")){
+        if(!e.getMessage().getContentStripped().startsWith("?addbeta")){
             return;
         }
         if(!e.getMessage().getMember().hasPermission(Permission.ADMINISTRATOR)){
@@ -43,7 +43,7 @@ public class addAlphaCmd extends ListenerAdapter {
         if(e.getMessage().getMentionedMembers().size() != 1){
             e.getChannel().sendMessage(new EmbedBuilder().setAuthor(e.getAuthor().getName(),null,e.getAuthor().getAvatarUrl())
                     .setColor(Color.RED)
-                    .setDescription("Usage: -addalpha {USER}")
+                    .setDescription("Usage: ?addalpha {USER}")
                     .build()).complete();
         }
         Member target = e.getMessage().getMentionedMembers().get(0);

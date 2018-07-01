@@ -33,7 +33,7 @@ public class addAlphaCmd extends ListenerAdapter {
         if (e.getAuthor().isBot()) return;
         if (!DiscordSupportBot.isSetUp(e.getGuild())) return;
 
-        if(!e.getMessage().getContentStripped().startsWith("?addbeta")){
+        if(!e.getMessage().getContentStripped().startsWith("?addalpha")){
             return;
         }
         if(!e.getMessage().getMember().hasPermission(Permission.ADMINISTRATOR)){
@@ -52,32 +52,28 @@ public class addAlphaCmd extends ListenerAdapter {
         List<Message> messages = new ArrayList<Message>();
         messages.add(e.getMessage());
 
-        Thread thread = new Thread(new Runnable() {
-            @Override
-            public void run() {
-                Message tmpMSG = c.sendMessage("Are you sure you want to add "+target.getAsMention()+ " to MinePoS Alpha Testing?").complete();
-                DiscordUtil.pullYesOrNo(tmpMSG, e.getAuthor(), new YesNoRunnable() {
-                    @Override
-                    public void run(Boolean b) {
-                        if(b){
-                            e.getChannel().sendMessage(new EmbedBuilder().setAuthor(target.getUser().getName(),null,target.getUser().getAvatarUrl())
-                                    .setColor(Color.GREEN)
-                                    .setDescription("Welcome to MinePoS Alpha!")
-                                    .build()).complete();
-                            e.getGuild().getController().addRolesToMember(target,e.getGuild().getRolesByName("alpha",true)).complete();
-                        }else{
-                            e.getChannel().sendMessage(new EmbedBuilder().setAuthor(e.getAuthor().getName(),null,e.getAuthor().getAvatarUrl())
-                                    .setColor(Color.RED)
-                                    .setDescription("Canceled!")
-                                    .build()).complete();
-                        }
+        Thread thread = new Thread(() -> {
+            Message tmpMSG = c.sendMessage("Are you sure you want to add "+target.getAsMention()+ " to MinePoS Alpha Testing?").complete();
+            DiscordUtil.pullYesOrNo(tmpMSG, e.getAuthor(), new YesNoRunnable() {
+                @Override
+                public void run(Boolean b) {
+                    if(b){
+                        e.getChannel().sendMessage(new EmbedBuilder().setAuthor(target.getUser().getName(),null,target.getUser().getAvatarUrl())
+                                .setColor(Color.GREEN)
+                                .setDescription("Welcome to MinePoS Alpha!")
+                                .build()).complete();
+                        e.getGuild().getController().addRolesToMember(target,e.getGuild().getRolesByName("alpha",true)).complete();
+                    }else{
+                        e.getChannel().sendMessage(new EmbedBuilder().setAuthor(e.getAuthor().getName(),null,e.getAuthor().getAvatarUrl())
+                                .setColor(Color.RED)
+                                .setDescription("Canceled!")
+                                .build()).complete();
                     }
-                });
+                }
+            });
 
-            }
         });
-        thread.run();
-
-
+        thread.setName("Add to alpha - " + target.getUser().getName());
+        thread.start();
     }
 }

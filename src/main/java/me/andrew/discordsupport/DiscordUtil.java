@@ -57,8 +57,7 @@ public class DiscordUtil {
     }
     public static PrivateMessageReactionAddEvent pullPrivateMessageReactionAddEvent(User user) {
         System.out.println("Pulled event!!!");
-
-        while (1 < 2) {
+        while (true) {
             PrivateMessageReactionAddEvent pulled = (PrivateMessageReactionAddEvent) pullEvent(PrivateMessageReactionAddEvent.class);
 
             if (pulled.getUser() == null || pulled.getUser().isBot()) continue;

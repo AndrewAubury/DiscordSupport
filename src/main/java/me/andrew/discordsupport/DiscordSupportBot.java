@@ -132,6 +132,7 @@ public class DiscordSupportBot {
             ).build();
 
             Database db = PooledDatabaseOptions.builder().options(options).createHikariDatabase();
+
             DB.setGlobalDatabase(db);
         }
         jda.addEventListener(new DiscordSetupListener());

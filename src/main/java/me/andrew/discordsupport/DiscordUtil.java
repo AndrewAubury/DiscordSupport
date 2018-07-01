@@ -147,10 +147,10 @@ public class DiscordUtil {
         return null;
     }
 
-    public static void executeDB(YesNoRunnable runnable, String q, Object... args){
+    public static void executeDB(YesNoRunnable runnable, String query, Object... params){
         try {
-            Long l = DB.executeInsert(q, args);
-            runnable.run(l != null);
+            int l = DB.executeUpdate(query, params);
+            runnable.run(true);
         } catch (SQLException e) {
             e.printStackTrace();
             runnable.run(false);

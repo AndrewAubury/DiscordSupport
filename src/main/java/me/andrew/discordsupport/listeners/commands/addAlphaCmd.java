@@ -87,6 +87,7 @@ public class addAlphaCmd extends ListenerAdapter {
                                         .build()).complete();
                             }
                         },"INSERT INTO `minepos_alpha_user_info` (`id`, `name`, `server_ip`, `server_type`, `minepos_link`) VALUES (NULL, '"+info.get("name")+"', '"+info.get("server-ip")+"', '"+info.get("host-type")+"', '"+info.get("link")+"');");
+                        return;
                     });
                 });
             });

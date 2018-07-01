@@ -1,5 +1,6 @@
 package me.andrew.discordsupport;
 
+import co.aikar.idb.DB;
 import me.andrew.discordsupport.DiscordSupportBot;
 import me.andrew.discordsupport.objects.QuestionRunnable;
 import me.andrew.discordsupport.objects.YesNoRunnable;
@@ -10,6 +11,8 @@ import net.dv8tion.jda.core.events.message.guild.react.GuildMessageReactionAddEv
 import net.dv8tion.jda.core.events.message.priv.react.PrivateMessageReactionAddEvent;
 import net.dv8tion.jda.core.hooks.ListenerAdapter;
 import org.apache.commons.lang.StringUtils;
+
+import java.sql.SQLException;
 
 public class DiscordUtil {
 
@@ -144,5 +147,14 @@ public class DiscordUtil {
         return null;
     }
 
+    public static void executeDB(YesNoRunnable runnable, String q, Object... args){
+        try {
+            Long l = DB.executeInsert(q, args);
+            runnable.run(l != null);
+        } catch (SQLException e) {
+            e.printStackTrace();
+            runnable.run(false);
+        }
+    }
 
 }

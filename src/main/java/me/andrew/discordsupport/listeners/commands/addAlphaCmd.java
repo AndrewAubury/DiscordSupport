@@ -15,7 +15,9 @@ import net.dv8tion.jda.core.hooks.ListenerAdapter;
 
 import java.awt.*;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * ------------------------------
@@ -53,23 +55,41 @@ public class addAlphaCmd extends ListenerAdapter {
         messages.add(e.getMessage());
 
         Thread thread = new Thread(() -> {
-            Message tmpMSG = c.sendMessage("Are you sure you want to add "+target.getAsMention()+ " to MinePoS Alpha Testing?").complete();
-            DiscordUtil.pullYesOrNo(tmpMSG, e.getAuthor(), new YesNoRunnable() {
-                @Override
-                public void run(Boolean b) {
-                    if(b){
-                        e.getChannel().sendMessage(new EmbedBuilder().setAuthor(target.getUser().getName(),null,target.getUser().getAvatarUrl())
-                                .setColor(Color.GREEN)
-                                .setDescription("Welcome to MinePoS Alpha!")
-                                .build()).complete();
-                        e.getGuild().getController().addRolesToMember(target,e.getGuild().getRolesByName("alpha",true)).complete();
-                    }else{
-                        e.getChannel().sendMessage(new EmbedBuilder().setAuthor(e.getAuthor().getName(),null,e.getAuthor().getAvatarUrl())
-                                .setColor(Color.RED)
-                                .setDescription("Canceled!")
-                                .build()).complete();
-                    }
-                }
+            Map<String, String> info = new HashMap<String, String>();
+            info.put("name",target.getEffectiveName());
+            c.sendMessage("Server IP?").complete();
+
+            DiscordUtil.pullString(c,e.getAuthor(),sip->{
+                info.put("server-ip", sip);
+                c.sendMessage("What will "+target.getAsMention()+ " be hosting MinePoS On?").complete();
+                DiscordUtil.pullString(c, e.getAuthor(), host -> {
+                    info.put("host-type", host);
+                    c.sendMessage("What will be the link for MinePoS").complete();
+                    DiscordUtil.pullString(c, e.getAuthor(), link -> {
+                        info.put("link", link);
+
+                        DiscordUtil.executeDB(b -> {
+                            if(b){
+                                e.getChannel().sendMessage(new EmbedBuilder().setAuthor(target.getUser().getName(),null,target.getUser().getAvatarUrl())
+                                        .setColor(Color.GREEN)
+                                        .setDescription("Welcome to MinePoS Alpha!```"
+                                                +"Name: "+info.get("name")
+                                                +"Server IP: "+info.get("server-ip")
+                                                +"Hosting Method: "+info.get("host-type")
+                                                +"MinePoS Link: "+info.get("link")
+                                                +"```")
+                                        .build()).complete();
+                                e.getGuild().getController().addRolesToMember(target,e.getGuild().getRolesByName("alpha",true)).complete();
+                            }else{
+                                e.getChannel().sendMessage(new EmbedBuilder().setAuthor(e.getAuthor().getName(),null,e.getAuthor().getAvatarUrl())
+                                        .setColor(Color.RED)
+                                        .setDescription("Error!")
+                                        .build()).complete();
+                            }
+                        },"INSERT INTO `minepos_alpha_user_info` (`id`, `name`, `server_ip`, `server_type`, `minepos_link`) VALUES (NULL, '?', '?', '?', '?');",info.get("name"),
+                                info.get("server-ip"), info.get("host-type"),info.get("link"));
+                    });
+                });
             });
 
         });

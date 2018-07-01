@@ -1,5 +1,9 @@
 package me.andrew.discordsupport;
 
+import co.aikar.idb.DB;
+import co.aikar.idb.Database;
+import co.aikar.idb.DatabaseOptions;
+import co.aikar.idb.PooledDatabaseOptions;
 import me.andrew.discordsupport.listeners.*;
 import me.andrew.discordsupport.GuildInfo;
 import lombok.Getter;
@@ -77,10 +81,12 @@ public class DiscordSupportBot {
         System.out.println("done");
 
         System.out.print("Loading guild configurations... ");
+        JSONObject jsonO = null;
         if (guildConfigurationsFile.exists()) {
             try {
                 long startTime = System.currentTimeMillis();
-                JSONArray jsonArray = new JSONArray(FileUtils.readFileToString(guildConfigurationsFile, Charset.forName("UTF-8")));
+                jsonO = new JSONObject(FileUtils.readFileToString(guildConfigurationsFile, Charset.forName("UTF-8")));
+                JSONArray jsonArray = jsonO.getJSONArray("guilds");
                 for (Object object : jsonArray) {
                     JSONObject jsonObject = (JSONObject) object;
                     HashMap<String, Object> data = new HashMap<String, Object>() {{
@@ -117,7 +123,17 @@ public class DiscordSupportBot {
             System.exit(2);
         }
         System.out.println("Logged in as " + jda.getSelfUser());
+        if(jsonO != null) {
+            DatabaseOptions options = DatabaseOptions.builder().mysql(
+                    jsonO.getString("mysql-username"),
+                    jsonO.getString( "mysql-password"),
+                    jsonO.getString("mysql-db"),
+                    jsonO.getString("mysql-ip")
+            ).build();
 
+            Database db = PooledDatabaseOptions.builder().options(options).createHikariDatabase();
+            DB.setGlobalDatabase(db);
+        }
         jda.addEventListener(new DiscordSetupListener());
         jda.addEventListener(new DiscordSupportTicketCreationListener());
         jda.addEventListener(new DiscordSupportTicketCloseListener());

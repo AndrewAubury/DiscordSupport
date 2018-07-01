@@ -73,9 +73,9 @@ public class addAlphaCmd extends ListenerAdapter {
                                 e.getChannel().sendMessage(new EmbedBuilder().setAuthor(target.getUser().getName(),null,target.getUser().getAvatarUrl())
                                         .setColor(Color.GREEN)
                                         .setDescription("Welcome to MinePoS Alpha!```"
-                                                +"Name: "+info.get("name")
-                                                +"Server IP: "+info.get("server-ip")
-                                                +"Hosting Method: "+info.get("host-type")
+                                                +"Name: "+info.get("name")+System.lineSeparator()
+                                                +"Server IP: "+info.get("server-ip")+System.lineSeparator()
+                                                +"Hosting Method: "+info.get("host-type")+System.lineSeparator()
                                                 +"MinePoS Link: "+info.get("link")
                                                 +"```")
                                         .build()).complete();

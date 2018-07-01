@@ -139,7 +139,6 @@
             <artifactId>idb-core</artifactId>
             <version>1.0.0-SNAPSHOT</version>
             <scope>compile</scope>
-
         </dependency>
         <dependency>
             <groupId>com.zaxxer</groupId>

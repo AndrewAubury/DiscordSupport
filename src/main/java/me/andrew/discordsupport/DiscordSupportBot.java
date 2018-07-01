@@ -13,8 +13,7 @@ import net.dv8tion.jda.core.JDA;
 import net.dv8tion.jda.core.JDABuilder;
 import net.dv8tion.jda.core.entities.Game;
 import net.dv8tion.jda.core.entities.Guild;
-import net.dv8tion.jda.core.exceptions.RateLimitedException;
-import org.apache.commons.io.FileUtils;
+    import org.apache.commons.io.FileUtils;
 import org.json.JSONArray;
 import org.json.JSONObject;
 

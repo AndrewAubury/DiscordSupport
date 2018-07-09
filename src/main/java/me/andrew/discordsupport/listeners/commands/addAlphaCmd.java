@@ -55,6 +55,8 @@ public class addAlphaCmd extends ListenerAdapter {
         messages.add(e.getMessage());
 
         Thread thread = new Thread(() -> {
+            addAlphaCmd t = this;
+
             Map<String, String> info = new HashMap<String, String>();
             info.put("name",target.getEffectiveName());
             c.sendMessage("Server IP?").complete();
@@ -67,7 +69,6 @@ public class addAlphaCmd extends ListenerAdapter {
                     c.sendMessage("What will be the link for MinePoS").complete();
                     DiscordUtil.pullString(c, e.getAuthor(), link -> {
                         info.put("link", link);
-
                         DiscordUtil.executeDB(b -> {
                             if(b){
                                 e.getChannel().sendMessage(new EmbedBuilder().setAuthor(target.getUser().getName(),null,target.getUser().getAvatarUrl())
@@ -86,7 +87,8 @@ public class addAlphaCmd extends ListenerAdapter {
                                         .setDescription("Error!")
                                         .build()).complete();
                             }
-                            return;
+                            
+                            Thread.currentThread().stop();
                         },"INSERT INTO `minepos_alpha_user_info` (`id`, `name`, `server_ip`, `server_type`, `minepos_link`) VALUES (NULL, '"+info.get("name")+"', '"+info.get("server-ip")+"', '"+info.get("host-type")+"', '"+info.get("link")+"');");
                         return;
                     });

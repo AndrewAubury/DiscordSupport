@@ -54,6 +54,7 @@ public class DiscordSupportBot {
             if (getJda() != null) jda.shutdown();
 
             if (registeredGuilds.size() > 0) {
+                JSONObject jo = new JSONObject();
                 JSONArray jsonArray = new JSONArray();
                 for (GuildInfo registeredGuild : registeredGuilds) {
                     JSONObject jsonObject = new JSONObject();
@@ -70,8 +71,10 @@ public class DiscordSupportBot {
 
                     jsonArray.put(jsonObject);
                 }
+                jo.put("guilds",jsonArray);
+
                 try {
-                    FileUtils.writeStringToFile(guildConfigurationsFile, jsonArray.toString(), Charset.forName("UTF-8"));
+                    FileUtils.writeStringToFile(guildConfigurationsFile, jo.toString(), Charset.forName("UTF-8"));
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
